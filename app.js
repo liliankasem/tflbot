@@ -47,9 +47,11 @@ intents.matches('None', '/help')
 //=========================================================
 
 bot.dialog('/findByClosestBusStop', [
+
     function (session){
         builder.Prompts.text(session, "Send me your current location, if you can't type: pass");
     },
+
     function (session, results, next) {
         if(results.response == "pass" || results.response == "Pass"){
             session.beginDialog('/noLocation');
@@ -86,7 +88,9 @@ bot.dialog('/findByClosestBusStop', [
             });
         }      
     }
-]);
+]
+
+);
 
 bot.dialog('/findByBusNum', [
     function (session, args) {
