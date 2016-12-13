@@ -26,7 +26,7 @@ var model = process.env.LUIS_MODEL;
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 
-bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^goodbye/i }); 
+bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^bye/i }); 
 bot.beginDialogAction('help', '/help', { matches: /^help/i }); 
 
 bot.dialog('/', intents);
@@ -82,7 +82,7 @@ bot.dialog('/findByClosestBusStop', [
                         console.log(time.getHours() + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);                      
                     } 
                 }else{
-                    session.send("There are no near by bus stops");
+                    session.endDialog("There are no near by bus stops");
                 }
 
             });
@@ -213,7 +213,7 @@ bot.dialog('/findByQuery', [
         }       
     },
     function(session){       
-        session.beginDialog('/checkArrivals');
+        session.replaceDialog('/checkArrivals');
     }
 ]);
 
@@ -221,7 +221,7 @@ bot.dialog('/proxy', [
     function(session){
         session.endDialog();
     }
-])
+]);
 
 bot.dialog('/noLocation', [
      function (session) {
@@ -234,8 +234,7 @@ bot.dialog('/noLocation', [
         session.beginDialog('/getTowards');
     },
     function (session) {
-        session.beginDialog('/checkArrivals');
-        session.endDialog();
+        session.replaceDialog('/checkArrivals');
     }
 ]);
 
@@ -299,7 +298,6 @@ bot.dialog('/greeting', [
         message.setChannelData(data);
         session.send(message); 
 
-
         session.endDialog("Hey!");
     }  
 ]);
@@ -313,8 +311,7 @@ bot.dialog('/getBusNum', [
             session.userData.busnum = results.response;
             session.endDialog();
         } else {
-            session.send("Error");
-            session.endDialog();
+            session.endDialog("Error");
         }
     } 
 ]);
@@ -343,8 +340,7 @@ bot.dialog('/getTowards', [
             session.userData.towards = results.response;           
             session.endDialog();
         } else {
-            session.send("Error");
-            session.endDialog();
+            session.endDialog("Error");
         }
     } 
 ]);
