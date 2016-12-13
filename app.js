@@ -86,7 +86,9 @@ bot.dialog('/findByClosestBusStop', [
                 }
 
             });
-        }      
+        }
+
+        session.endDialog();      
     }
 ]
 
@@ -295,9 +297,8 @@ bot.dialog('/greeting', [
          //Should check if user is using Telegram before trying to send a Telegram sticker
         var data = { method: "sendSticker", parameters: { sticker: { url: "https://telegram.org/file/811140007/2/uHbXgsdVXQY/a75eee858dd829fb89", mediaType: "image/webp"} } };
         const message = new builder.Message(session);
-        message.setChannelData(data);
+        message.sourceEvent(data);
         session.send(message); 
-
         session.endDialog("Hey!");
     }  
 ]);
@@ -325,8 +326,7 @@ bot.dialog('/getBusStop', [
             session.userData.busstop = results.response;     
             session.endDialog();
         } else {
-            session.send("Error");
-            session.endDialog();
+            session.endDialog("Error");
         }
     } 
 ]);
