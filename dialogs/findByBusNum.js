@@ -43,7 +43,7 @@ module.exports = function () {
                 .catch(error => {
                     session.send("findByBusNum: computer says no (can't find stoppoint by location)");
                     session.send(error);
-                    session.endDialog();
+                    session.endConversation();
                 });
                 next;         
             }else{
@@ -74,7 +74,7 @@ module.exports = function () {
             .catch(error => {
                 session.send("findByBusNum: computer says no (can't find stoppoint data)");
                 session.send(error);
-                session.endDialog();
+                session.endConversation();
             })
             .then(result => {
                 var busnum = session.userData.busnum;
@@ -90,15 +90,17 @@ module.exports = function () {
                         var destinationName = searchResult[i].destinationName;   
                         var arrivalTime = searchResult[i].expectedArrival;
                         var time = new Date(arrivalTime);   
-                        session.send(time.getHours()+1 + ":" + time.getMinutes());   
-                        console.log(time.getHours()+1 + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);        
-                    }    
+                        session.send(time.getHours() + ":" + time.getMinutes());   
+                        console.log(time.getHours() + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);        
+                    }
+
+                    session.endConversation();    
                 } 
             })
             .catch(error => {
                 session.send("findByBusNum: computer says no (can't find arrivals Id)");
                 session.send(error);
-                session.endDialog();
+                session.endConversation();
             });
         }
     ]);

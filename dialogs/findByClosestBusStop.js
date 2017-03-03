@@ -8,7 +8,7 @@ module.exports = function () {
         (session, results, next) => {
             if(results.response == "pass" || results.response == "Pass"){
                 session.beginDialog('/noLocation');
-            }else{
+            }else if(session.message.entities[0].geo != null){
                 session.userData.lat = session.message.entities[0].geo.latitude;
                 session.userData.lon = session.message.entities[0].geo.longitude;
 
@@ -22,7 +22,7 @@ module.exports = function () {
                 .catch(error => {
                     session.send("findByClosestBusStop: computer says no (can't find stoppoint)");
                     session.send(error);
-                    session.endDialog();
+                    session.endConversation();
                 })
                 .then(result => { 
                     var searchResult = JSON.parse(result.text);
@@ -38,14 +38,18 @@ module.exports = function () {
                             console.log(time.getHours() + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);                      
                         } 
                     }else{
-                        session.endDialog("There are no near by bus stops");
+                        session.endConversation("There are no near by bus stops");
                     }
+
+                    session.endConversation();
                 })
                 .catch(error => {
                     session.send("findByClosestBusStop: computer says no (can't find arrivals Id)");
                     session.send(error);
-                    session.endDialog();
+                    session.endConversation();
                 });  
+            }else{
+                session.replaceDialog('/findByClosestBusStop');
             }
         }
     ]);

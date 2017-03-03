@@ -14,7 +14,7 @@ module.exports = function () {
             .catch(error => {
                 session.send("checkArrivals: computer says no (can't find busstop)");
                 session.send(error);
-                session.endDialog();
+                session.endConversation();
             })
             .then(result => { 
                 var naptanId;
@@ -30,7 +30,7 @@ module.exports = function () {
             .catch(error => {
                 session.send("checkArrivals: computer says no (can't find stop Id)");
                 session.send(error);
-                session.endDialog();
+                session.endConversation();
             })           
             .then(result => { 
                 var searchResult = JSON.parse(result.text);
@@ -42,15 +42,17 @@ module.exports = function () {
                         var destinationName = searchResult[i].destinationName;   
                         var arrivalTime = searchResult[i].expectedArrival;
                         var time = new Date(arrivalTime);   
-                        session.send(time.getHours()+1 + ":" + time.getMinutes());   
-                        console.log(time.getHours()+1 + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);        
+                        session.send(time.getHours() + ":" + time.getMinutes());   
+                        console.log(time.getHours() + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);        
                     }
-                } 
+                }
+
+                session.endConversation();
             })
             .catch(error => {
                 session.send("checkArrivals: computer says no (can't find arrivals Id)");
                 session.send(error);
-                session.endDialog();
+                session.endConversation();
             });
         }
     ]);
