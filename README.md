@@ -20,13 +20,6 @@ $ npm install
 ```
 $ node app.js
 ```
-## The TFL API
-
-TFL API calls won't work with the current tfl.api node module. The latest version of the tfl.api (with the stop point api endpoint) can be found here:
-
-https://github.com/liliankasem/tfl.api/tree/stoppoint
-
-You'll need to copy over the stoppoint.js and index.js code manually from the download above into the "node_modules/tfl.api/src" folder that is part of this project (which you will see when you run npm install for the first time). This is because my pull request for the API has not been accepted yet.
 
 ## Setting up the LUIS model
 
