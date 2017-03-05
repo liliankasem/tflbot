@@ -8,7 +8,7 @@ https://mva.microsoft.com/en-US/training-courses/getting-started-with-bots-16759
 ## What you need
 
 * Install nodejs: https://nodejs.org/en/
-* Install the bot emulator: https://download.botframework.com/bf-v3/tools/emulator/publish.htm
+* Install the bot emulator: https://aka.ms/bf-bc-emulator
 
 ## Running the bot locally
 
