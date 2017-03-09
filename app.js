@@ -1,3 +1,4 @@
+require('./utils.js')();
 require('./config.js')();
 require('./connectorSetup.js')();
 
@@ -45,4 +46,3 @@ bot.dialog('/help', [
         session.endDialog("Here are some example statements you can say to me: \n\n* Next bus \n* When is the 28 coming \n* When is the next 28 from townmead road to wandsworth");
     }  
 ]);
-

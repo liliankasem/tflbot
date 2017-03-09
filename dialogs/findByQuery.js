@@ -23,14 +23,12 @@ module.exports = function () {
                 } else {
                     session.userData.towards = towards.entity;           
                 }
-
-         //   session.beginDialog('/proxy');
-
+                
             }else{
                 session.beginDialog('/noLocation');
             }      
 
-            next; 
+            next(); 
         }, 
 
         (session) => {       

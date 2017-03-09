@@ -90,8 +90,11 @@ module.exports = function () {
                         var destinationName = searchResult[i].destinationName;   
                         var arrivalTime = searchResult[i].expectedArrival;
                         var time = new Date(arrivalTime);   
-                        session.send(time.getHours() + ":" + time.getMinutes());   
-                        console.log(time.getHours() + ":" + time.getMinutes() + "     " + lineName + " to " + destinationName);        
+                        var timeNow = new Date();
+                        var differenceInMinutes = time - timeNow;
+                        var estimatedArrivalMinutes = Math.round(differenceInMinutes / 60000);
+                        session.send("{0}:{1}   [{2}mins]".format(time.getHours(), time.getMinutes(), estimatedArrivalMinutes));  
+                        console.log("{0}:{1}   -----   {2} to {3}".format(time.getHours(), time.getMinutes(), lineName, destinationName));        
                     }
 
                     session.endConversation();    
