@@ -1,15 +1,19 @@
 module.exports = function () {
     bot.dialog('/noLocation', [
-        (session) => {
-            session.beginDialog('/getBusNum');
+        (session, args, next) => {
+            if(session.userData.busnum == ''){
+                session.beginDialog('/getBusNum');
+            }else{
+                next();
+            }      
         },
-        (session) => {
+        (session, args, next) => {
             session.beginDialog('/getBusStop');
         },
-        (session) => {
+        (session, args, next) => {
             session.beginDialog('/getTowards');
         },
-        (session) => {
+        (session, args, next) => {
             session.replaceDialog('/checkArrivals');
         }
     ]);

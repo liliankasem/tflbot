@@ -28,7 +28,7 @@ intents.matches('None', '/start')
 
 bot.dialog('/start', [
     (session) => {
-        session.send("Hey there! I am Bus Bot, your one stop shop for travelling with busses in London! My purpose in life is to help you find information about bus times in London."); 
+        session.send("I am Bus Bot, your one stop shop for travelling with busses in London! My purpose in life is to help you find information about bus times in London."); 
         session.sendTyping();
         session.replaceDialog('/help');
     }  
