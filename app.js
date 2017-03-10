@@ -2,6 +2,8 @@ require('./utils.js')();
 require('./config.js')();
 require('./connectorSetup.js')();
 
+require('./dialogs/displayResults.js')();
+require('./dialogs/displayResultsAll.js')();
 require('./dialogs/checkArrivals.js')();
 require('./dialogs/findByBusNum.js')();
 require('./dialogs/findByClosestBusStop.js')();

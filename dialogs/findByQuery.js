@@ -27,8 +27,6 @@ module.exports = function () {
             }else{
                 session.beginDialog('/noLocation');
             }      
-
-            next(); 
         }, 
 
         (session) => {       
