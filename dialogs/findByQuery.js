@@ -23,13 +23,17 @@ module.exports = function () {
                 } else {
                     session.userData.towards = towards.entity;           
                 }
+
+                if(busnum && busstop && towards){
+                    next();
+                }           
                 
             }else{
-                session.beginDialog('/noLocation');
+                session.replaceDialog('/noLocation');
             }      
         }, 
 
-        (session) => {       
+        (session, args, next) => {       
             session.replaceDialog('/checkArrivals');
         }
     ]);
