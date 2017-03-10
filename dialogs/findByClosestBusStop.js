@@ -2,11 +2,12 @@ module.exports = function () {
     bot.dialog('/findByClosestBusStop', [
 
         (session) => {
-            builder.Prompts.text(session, "Send me your current location, if you can't type: pass");
+            builder.Prompts.text(session, "Please send me your current location. If you can't send location data, type: pass");
         },
 
         (session, results, next) => {
             if(results.response == "pass" || results.response == "Pass"){
+                session.userData.busnum = '';
                 session.beginDialog('/noLocation');
             }else if(session.message.entities[0].geo != null){
                 session.userData.lat = session.message.entities[0].geo.latitude;
@@ -27,6 +28,7 @@ module.exports = function () {
                 .then(result => { 
                     var searchResult = JSON.parse(result.text);
                     if(searchResult.length != 0){
+                        session.send("Here are the expected arrival times for the {0} from {1} to {2}:".format(busnum, busstop, towards));
                         var i = searchResult.length-1;
                         for(i; i>=0; i--){
                             var lineName = searchResult[i].lineName;
@@ -38,12 +40,11 @@ module.exports = function () {
                             var estimatedArrivalMinutes = Math.round(differenceInMinutes / 60000);
                             session.send("{0}:{1}   [{2}mins]".format(time.getHours(), time.getMinutes(), estimatedArrivalMinutes));  
                             console.log("{0}:{1}   -----   {2} to {3}".format(time.getHours(), time.getMinutes(), lineName, destinationName));                   
-                        } 
+                        }
+                        session.endConversation(); 
                     }else{
                         session.endConversation("There are no near by bus stops");
                     }
-
-                    session.endConversation();
                 })
                 .catch(error => {
                     session.send("findByClosestBusStop: computer says no (can't find arrivals Id)");

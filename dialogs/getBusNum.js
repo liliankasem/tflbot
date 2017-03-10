@@ -1,7 +1,7 @@
 module.exports = function () {
     bot.dialog('/getBusNum', [
         (session) => {
-            builder.Prompts.text(session, "What is the number of the bus you looking for?");
+            builder.Prompts.text(session, "What is the number of the bus you are waiting for?");
         },
         (session, results) => {
             session.userData.busnum = results.response;

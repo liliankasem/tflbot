@@ -1,12 +1,17 @@
 module.exports = function () {
     bot.dialog('/location', [
         (session, next) => {
-            builder.Prompts.text(session, "Please send me your current location.");
+            builder.Prompts.text(session, "Please send me your current location. If you can't send location data, type: pass");
         },
 
         (session, results, next) => {
-            session.userData.lat = session.message.entities[0].geo.latitude;
-            session.userData.lon = session.message.entities[0].geo.longitude;
+            if(results.response == "pass" || results.response == "Pass"){
+                session.userData.busnum = '';
+                session.beginDialog('/noLocation');
+            }else if(session.message.entities[0].geo != null){
+                session.userData.lat = session.message.entities[0].geo.latitude;
+                session.userData.lon = session.message.entities[0].geo.longitude;
+            }
 
             tfl.stoppoint({ lat: session.userData.lat, lon: session.userData.lon, stopTypes: 'NaptanBusWayPoint,NaptanBusCoachStation,NaptanPublicBusCoachTram'})
             .then(result => {     
@@ -79,23 +84,26 @@ module.exports = function () {
             tfl.stoppoint.byIdArrivals(naptanId)
             .then(result => { 
                 var searchResult = JSON.parse(result.text);
-                var i = searchResult.length-1;
-                session.send(busnum + " towards " + direction);
-                for(i; i>=0; i--){
-                    if(searchResult[i].lineName == busnum){
-                        var lineName = searchResult[i].lineName;
-                        var destinationName = searchResult[i].destinationName;   
-                        var arrivalTime = searchResult[i].expectedArrival;
-                        var time = new Date(arrivalTime);   
-                        var timeNow = new Date();
-                        var differenceInMinutes = time - timeNow;
-                        var estimatedArrivalMinutes = Math.round(differenceInMinutes / 60000);
-                        session.send("{0}:{1}   [{2}mins]".format(time.getHours(), time.getMinutes(), estimatedArrivalMinutes));   
-                        console.log("{0}:{1}   -----   {2} to {3}".format(time.getHours(), time.getMinutes(), lineName, destinationName));        
-                    }    
-                } 
-
-                session.endConversation();
+                if(searchResult.length != 0){
+                    var i = searchResult.length-1;
+                    session.send("Here are the expected arrival times for the {0} from {1} to {2}:".format(busnum, busstop, towards));
+                    for(i; i>=0; i--){
+                        if(searchResult[i].lineName == busnum){
+                            var lineName = searchResult[i].lineName;
+                            var destinationName = searchResult[i].destinationName;   
+                            var arrivalTime = searchResult[i].expectedArrival;
+                            var time = new Date(arrivalTime);   
+                            var timeNow = new Date();
+                            var differenceInMinutes = time - timeNow;
+                            var estimatedArrivalMinutes = Math.round(differenceInMinutes / 60000);
+                            session.send("{0}:{1}   [{2}mins]".format(time.getHours(), time.getMinutes(), estimatedArrivalMinutes));   
+                            console.log("{0}:{1}   -----   {2} to {3}".format(time.getHours(), time.getMinutes(), lineName, destinationName));        
+                        }    
+                    }
+                    session.endConversation();
+                }else{
+                    session.endConversation("Sorry, I couldn't find anything :(");
+                }
             })
             .catch(error => {
                 session.send("location: computer says no (can't find ArrivalsId)");
