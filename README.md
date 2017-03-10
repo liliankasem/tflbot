@@ -30,7 +30,7 @@ https://www.microsoft.com/cognitive-services/en-us/luis-api/documentation/home
 * Go to luis.ai
 * Register or sign in to your account
 * Click on 'Add New App' and select 'Import Existing Application'
-* Upload the 'busbot_luis_model.json' file found in this project
+* Upload the 'londonbusbot.json' file found in this project
 * You then need to start feeding in different phrases 1) labeling the intents 2) highliging the entities you want to extract in each phrase
 * Train and publish the model to get the URL needed to run the bot with LUIS, which is this line in of the code:
 ```
