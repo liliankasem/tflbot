@@ -20,11 +20,12 @@ module.exports = function () {
                     var estimatedArrivalMinutes = Math.round(differenceInMinutes / 60000);
                     msg.addAttachment(new builder.HeroCard(session)
                         .title("{0} to {1}".format(searchResult[time].lineName, searchResult[time].destinationName))                   
-                        .text("{0}:{1} - [{2}mins]".format( times[time].getHours(), times[time].getMinutes(), estimatedArrivalMinutes))
+                        .text("{0}:{1} \n [{2}mins]".format( times[time].getHours(), times[time].getMinutes(), estimatedArrivalMinutes))
                     );
                     console.log("{0}:{1}   -----   {2} to {3}".format(times[time].getHours(), times[time].getMinutes(), searchResult[time].lineNam, searchResult[time].destinationName)); 
                 }
-                session.endConversation(msg);
+                session.send(msg);
+                session.replaceDialog('/mainMenu');
             }else{
                 session.endConversation("Sorry, I couldn't find anything :(");
             }

@@ -1,7 +1,7 @@
 module.exports = function () {
-    bot.dialog('/selectDirection', [
+    bot.dialog('/selectLine', [
         (session) =>{
-            builder.Prompts.choice(session, "Which direction is your bus heading in?", session.userData.directionArray,
+            builder.Prompts.choice(session, "Which tube line are you interested in?", session.userData.linesArray,
             {
                 listStyle: builder.ListStyle.button,
                 retryPrompt: 'The value entered is not valid, please try again.',
@@ -9,7 +9,7 @@ module.exports = function () {
             });
         },
         (session, results) => {
-            session.userData.direction = results.response.entity;
+            session.userData.line = results.response.entity;
             session.endDialog();
         } 
     ]);

@@ -12,9 +12,8 @@ module.exports = function () {
                 return tfl.stoppoint.byId(stopId);
             })
             .catch(error => {
-                session.send("checkArrivals: computer says no (can't find busstop)");
-                session.send(error);
-                session.endConversation();
+                session.send("Sorry! I can't find this bus stop.");
+                session.replaceDialog('/transportMode');
             })
             .then(result => { 
                 var naptanId;
@@ -28,17 +27,15 @@ module.exports = function () {
                 return tfl.stoppoint.byIdArrivals(naptanId);
             })
             .catch(error => {
-                session.send("checkArrivals: computer says no (can't find stop Id)");
-                session.send(error);
-                session.endConversation();
+                session.send("Sorry! I can't find this bus stop.");
+                session.replaceDialog('/transportMode');
             })           
             .then(result => { 
                 session.replaceDialog('/displayResults', { result });
             })
             .catch(error => {
-                session.send("checkArrivals: computer says no (can't find arrivals Id)");
-                session.send(error);
-                session.endConversation();
+                session.send("Sorry! I can't find this bus stop.");
+                session.replaceDialog('/transportMode');
             });
         }
     ]);

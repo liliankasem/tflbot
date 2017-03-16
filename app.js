@@ -16,6 +16,12 @@ require('./dialogs/nolocation.js')();
 require('./dialogs/selectBus.js')();
 require('./dialogs/selectDirection')();
 require('./dialogs/noLocationDataPass')();
+require('./dialogs/transportMode')();
+require('./dialogs/tubeArrivals')();
+require('./dialogs/tubeStatus')();
+require('./dialogs/selectLine')();
+require('./dialogs/displayResultsTube')();
+
 
 bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^bye/i }); 
 bot.beginDialogAction('home', '/start', { matches: /^home/i });
@@ -26,24 +32,41 @@ intents.matches('None', '/start')
 .matches('findbylocation', '/findByClosestBusStop')
 .matches('findbybusnum', '/findByBusNum')
 .matches('detailedquery', '/findByQuery')
-.matches('greeting', '/greeting')
+.matches('greeting', '/start')
 .matches('setlocation', '/location')
 .onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
-bot.dialog('/start', [
+bot.dialog('/start',
     (session) => {
-        session.send("I am Bus Bot, your one stop shop for travelling with busses in London! My purpose in life is to help you find information about bus times in London."); 
-        session.sendTyping();
-        session.replaceDialog('/help');
-    }  
-]);
+        session.send("Hey there! I am Bus Bot, your one stop shop for travelling with buses in London! My purpose in life is to help you find information about bus times in London."); 
 
-bot.dialog('/greeting', [
+        session.replaceDialog('/mainMenu');
+    }
+);
+
+bot.dialog('/mainMenu', [
     (session) => {
-        session.send("Hey there!");
-        session.sendTyping();
-        session.replaceDialog('/start');
-    }  
+        var promptMsg = "What would you like to do?";
+        var choices = ["Check Departure Times", "Tube Status Update"];
+        builder.Prompts.choice(session, promptMsg, choices, { listStyle: builder.ListStyle.button });
+    },
+    (session, results) => {
+        if (results.response) {
+            var selection = results.response.entity;
+            // route to corresponding dialogs
+            switch (selection) {
+                case "Check Departure Times":
+                    session.replaceDialog('/transportMode');
+                    break;
+                case "Tube Status Update":
+                    session.replaceDialog("/tubeStatus")
+                    break;
+                default:
+                    session.reset('/');
+                    break;
+            }
+        }
+    }
 ]);
 
 bot.dialog('/help', [
@@ -51,3 +74,4 @@ bot.dialog('/help', [
         session.endDialog("Here are some example statements you can say to me: \n\n* Next bus \n* When is the 28 coming \n* When is the next 28 from townmead road to wandsworth");
     }  
 ]);
+
