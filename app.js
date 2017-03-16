@@ -15,6 +15,7 @@ require('./dialogs/location.js')();
 require('./dialogs/nolocation.js')();
 require('./dialogs/selectBus.js')();
 require('./dialogs/selectDirection')();
+require('./dialogs/noLocationDataPass')();
 
 bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^bye/i }); 
 bot.beginDialogAction('home', '/start', { matches: /^home/i });
@@ -39,7 +40,9 @@ bot.dialog('/start', [
 
 bot.dialog('/greeting', [
     (session) => {
-        session.endDialog("Hey there!");
+        session.send("Hey there!");
+        session.sendTyping();
+        session.replaceDialog('/start');
     }  
 ]);
 

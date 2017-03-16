@@ -15,39 +15,43 @@ module.exports = function () {
         (session, results) => {
             if(results.response == "pass" || results.response == "Pass"){
                 session.beginDialog('/noLocation');
-            }else if(session.message.entities[0].geo != null){
-                session.userData.lat = session.message.entities[0].geo.latitude;
-                session.userData.lon = session.message.entities[0].geo.longitude;
+            }else if(session.message.entities.length > 0){
+                if(session.message.entities[0].geo != null){
+                    session.userData.lat = session.message.entities[0].geo.latitude;
+                    session.userData.lon = session.message.entities[0].geo.longitude;
 
-                tfl.stoppoint({ lat: session.userData.lat, lon: session.userData.lon, stopTypes: 'NaptanBusWayPoint,NaptanBusCoachStation,NaptanPublicBusCoachTram'})
-                .then(result => {     
-                    var searchResult = JSON.parse(result.text);   
-                    var stopPointsNum = searchResult.stopPoints.length;
-                    var direction = new Array();
-                    var i = 0;
-                    var j = 0;
-                    var counter = 0;
-                    
-                    for(i; i<stopPointsNum; i++){
-                        for(j; j<searchResult.stopPoints[i].lines.length; j++){
-                            if(searchResult.stopPoints[i].lines[j].name == session.userData.busnum){
-                                direction[counter] = searchResult.stopPoints[i].additionalProperties[1].value;
-                                counter++;
+                    tfl.stoppoint({ lat: session.userData.lat, lon: session.userData.lon, stopTypes: 'NaptanBusWayPoint,NaptanBusCoachStation,NaptanPublicBusCoachTram'})
+                    .then(result => {     
+                        var searchResult = JSON.parse(result.text);   
+                        var stopPointsNum = searchResult.stopPoints.length;
+                        var direction = new Array();
+                        var i = 0;
+                        var j = 0;
+                        var counter = 0;
+                        
+                        for(i; i<stopPointsNum; i++){
+                            for(j; j<searchResult.stopPoints[i].lines.length; j++){
+                                if(searchResult.stopPoints[i].lines[j].name == session.userData.busnum){
+                                    direction[counter] = searchResult.stopPoints[i].additionalProperties[1].value;
+                                    counter++;
+                                }
                             }
+                            j=0;         
                         }
-                        j=0;         
-                    }
 
-                    session.userData.directionArray = direction;
-                    session.beginDialog('/selectDirection');
-                })
-                .catch(error => {
-                    session.send("findByBusNum: computer says no (can't find stoppoint by location)");
-                    session.send(error);
-                    session.endConversation();
-                });      
+                        session.userData.directionArray = direction;
+                        session.beginDialog('/selectDirection');
+                    })
+                    .catch(error => {
+                        session.send("findByBusNum: computer says no (can't find stoppoint by location)");
+                        session.send(error);
+                        session.endConversation();
+                    });      
+                }else{
+                    session.replaceDialog('/noLocationDataPass');
+                }          
             }else{
-                session.replaceDialog('/findByBusNum');
+                session.replaceDialog('/noLocationDataPass');
             }
         },
 

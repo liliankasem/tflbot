@@ -8,34 +8,38 @@ module.exports = function () {
             if(results.response == "pass" || results.response == "Pass"){
                 session.userData.busnum = '';
                 session.beginDialog('/noLocation');
-            }else if(session.message.entities[0].geo != null){
-                session.userData.lat = session.message.entities[0].geo.latitude;
-                session.userData.lon = session.message.entities[0].geo.longitude;
-            
-                tfl.stoppoint({ lat: session.userData.lat, lon: session.userData.lon, stopTypes: 'NaptanBusWayPoint,NaptanBusCoachStation,NaptanPublicBusCoachTram'})
-                .then(result => {     
-                    var searchResult = JSON.parse(result.text);   
-                    var stopPointsNum = searchResult.stopPoints.length;
-                    var direction = new Array();
-                    var counter=0;
-                    for(var i=0; i<stopPointsNum; i++){
-                        if(searchResult.stopPoints[i].lines.length != 0){
-                            direction[counter] = searchResult.stopPoints[i].additionalProperties[1].value;
-                            counter++;
-                        }           
-                    }
+            }else if(session.message.entities.length > 0){
+                if(session.message.entities[0].geo != null){
+                    session.userData.lat = session.message.entities[0].geo.latitude;
+                    session.userData.lon = session.message.entities[0].geo.longitude;
+                
+                    tfl.stoppoint({ lat: session.userData.lat, lon: session.userData.lon, stopTypes: 'NaptanBusWayPoint,NaptanBusCoachStation,NaptanPublicBusCoachTram'})
+                    .then(result => {     
+                        var searchResult = JSON.parse(result.text);   
+                        var stopPointsNum = searchResult.stopPoints.length;
+                        var direction = new Array();
+                        var counter=0;
+                        for(var i=0; i<stopPointsNum; i++){
+                            if(searchResult.stopPoints[i].lines.length != 0){
+                                direction[counter] = searchResult.stopPoints[i].additionalProperties[1].value;
+                                counter++;
+                            }           
+                        }
 
-                    session.userData.directionArray = direction;
-                    session.beginDialog('/selectDirection');
-                })
-                .catch(error => {
-                    session.send("location: computer says no (can't find stoppoint data)");
-                    session.send(error);
-                    session.endConversation();
-                });;
-                next();
+                        session.userData.directionArray = direction;
+                        session.beginDialog('/selectDirection');
+                    })
+                    .catch(error => {
+                        session.send("location: computer says no (can't find stoppoint data)");
+                        session.send(error);
+                        session.endConversation();
+                    });;
+                    //next();
+                }else{
+                    session.replaceDialog('noLocationDataPass');
+                }
             }else{
-                session.replaceDialog('/location');
+                session.replaceDialog('/noLocationDataPass');
             }
         },
 
