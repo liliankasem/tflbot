@@ -17,7 +17,7 @@ module.exports = function () {
                 }
 
                 if(times.length == 0){
-                    session.endConversation("There isn't a {0} bus at {1} busstop".format(busnum, busstop));
+                    session.endConversation("Either there isn't a {0} bus at {1} busstop, or there are currently no bus times available".format(busnum, busstop));
                 }else{
                     session.send("Here are the expected arrival times for the {0} from {1} to {2}:".format(busnum, busstop, towards));
                     times.sort();
