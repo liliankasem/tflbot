@@ -9,7 +9,11 @@ module.exports = function () {
             }else{
                 session.beginDialog('/getBusNum'); 
             }
-            builder.Prompts.text(session, "Please send me your current location. If you can't send location data, type: pass");
+            builder.Prompts.text(session, "Please send me your current location. If you can't send location data, type: pass",
+            {
+                retryPrompt: 'The value entered is not valid, please try again.',
+                maxRetries: 2
+            });
         },
         
         (session, results) => {
