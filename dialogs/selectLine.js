@@ -12,6 +12,13 @@ module.exports = function () {
             session.userData.line = results.response.entity;
             session.endDialog();
         } 
-    ]);
+    ])
+    .cancelAction('Cancel', 'Operation cancelled', {
+        matches: /^cancel$/,
+        onSelectAction: (session, args) => {
+            session.endConversation(`Operation cancelled.`);
+        },
+        confirmPrompt: `Are you sure you wish to cancel?`
+    });
 }
 
