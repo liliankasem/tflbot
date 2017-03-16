@@ -39,9 +39,11 @@ module.exports = function () {
                         session.endConversation();
                     }); 
                 }else{
+                    session.userData.busnum = '';
                     session.replaceDialog('/noLocationDataPass');
                 }            
             }else{
+                session.userData.busnum = '';
                 session.replaceDialog('/noLocationDataPass');
             }
         }
